@@ -41,6 +41,9 @@ gen_h = 0
 
 curRect = 1
 
+success = 0
+try_number = 5000
+
 
 def print_square():
 	global square_array
@@ -83,46 +86,56 @@ def find_next_coord():
 #            for i in range(0,gen_w):
 #                square_array[curY+j][curX+i]=curRect
 
-for k in range(1, 400):
-	gen_w = 0
-	gen_h = 0
+for t in range(0, try_number):
+	for k in range(1, 400):
+		gen_w = 0
+		gen_h = 0
 
-	find_next_coord()  # set curX, curY
-	#print("Coord: " + str(curX) + ","+str(curY))
-	if (curY >= square_step):
+		find_next_coord()  # set curX, curY
+		#print("Coord: " + str(curX) + ","+str(curY))
+		if (curY >= square_step):
+			success = 1
+			break
+		find_next_limit_x()  # set limX
+		#print("Limit X: " + str(limX))
+		#print("Tile: " + str(k))
+
+		if ((limX - curX) >= width_limit_max):  # can create random rect
+			#print("can create random width")
+			gen_w = width_limit_min + random.randint(0, random_margin_w)
+		elif ((limX - curX) >= width_limit_min):  # must use free space
+			#print("must use free space width")
+			gen_w = limX - curX
+		else:  # can't create rect fitting specs
+			#print("fail width")
+			break
+
+		if ((square_step - curY) >=
+		    height_limit_max):  # can create random rect
+			gen_h = height_limit_min + random.randint(0, random_margin_h)
+			#print("can create random height")
+		elif ((square_step - curY) >= height_limit_min):  # must use free space
+			gen_h = square_step - curY
+			#print("must use free space height")
+		else:  # can't create rect fitting specs
+			#print("fail height")
+			break
+
+		#print("Width: " + str(gen_w) # create rect
+		#    + " Height: " + str(gen_h) + "\n")
+		for j in range(0, gen_h):
+			for i in range(0, gen_w):
+				square_array[curY + j][curX + i] = k
+
+		#print_square()
+	if (success):
 		break
-	find_next_limit_x()  # set limX
-	#print("Limit X: " + str(limX))
-	#print("Tile: " + str(k))
 
-	if ((limX - curX) >= width_limit_max):  # can create random rect
-		#print("can create random width")
-		gen_w = width_limit_min + random.randint(0, random_margin_w)
-	elif ((limX - curX) >= width_limit_min):  # must use free space
-		#print("must use free space width")
-		gen_w = limX - curX
-	else:  # can't create rect fitting specs
-		print("fail width")
-		break
-
-	if ((square_step - curY) >= height_limit_max):  # can create random rect
-		gen_h = height_limit_min + random.randint(0, random_margin_h)
-		#print("can create random height")
-	elif ((square_step - curY) >= height_limit_min):  # must use free space
-		gen_h = square_step - curY
-		#print("must use free space height")
-	else:  # can't create rect fitting specs
-		print("fail height")
-		break
-
-	#print("Width: " + str(gen_w) # create rect
-	#    + " Height: " + str(gen_h) + "\n")
-	for j in range(0, gen_h):
-		for i in range(0, gen_w):
-			square_array[curY + j][curX + i] = k
-
-	#print_square()
-
-print("Final Square")
-print("")
-print_square()
+if (success):
+	print("Final Square")
+	print("")
+	print_square()
+else:
+	print("Tried " + str(try_number) +
+	      " times and couldn't find a valid solution.")
+	print("Try setting height or width min limit lower.")
