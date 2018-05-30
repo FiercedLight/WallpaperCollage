@@ -2,7 +2,7 @@ import random
 import sys
 
 print(
-    "For best results pick square size, width, and height divisible by precision"
+	"For best results pick square size, width, and height divisible by precision"
 )
 print("and pick min limits same as precision.")
 
@@ -12,19 +12,19 @@ square_step = int(square_size / square_precision)
 square_array = [[0 for x in range(square_step)] for y in range(square_step)]
 
 width_limit_max = int(
-    int(input('Rectangle width max limit (200): ') or "200") /
-    square_precision)
+	int(input('Rectangle width max limit (200): ') or "200") /
+	square_precision)
 width_limit_min = int(
-    int(input('Rectangle width min limit (precision): ') or square_precision) /
-    square_precision)
+	int(input('Rectangle width min limit (precision): ') or square_precision) /
+	square_precision)
 height_limit_max = int(
-    int(input('Rectangle height max limit (300): ') or "300") /
-    square_precision)
+	int(input('Rectangle height max limit (300): ') or "300") /
+	square_precision)
 height_limit_min = int(
-    int(input('Rectangle height min limit (precision): ') or square_precision)
-    / square_precision)
+	int(input('Rectangle height min limit (precision): ') or square_precision)
+	/ square_precision)
 
-print ""
+print ("")
 
 square_size = int(square_size / square_precision) * square_precision
 
@@ -111,7 +111,7 @@ for t in range(0, try_number):
 			break
 
 		if ((square_step - curY) >=
-		    height_limit_max):  # can create random rect
+			height_limit_max):  # can create random rect
 			gen_h = height_limit_min + random.randint(0, random_margin_h)
 			#print("can create random height")
 		elif ((square_step - curY) >= height_limit_min):  # must use free space
@@ -128,14 +128,23 @@ for t in range(0, try_number):
 				square_array[curY + j][curX + i] = k
 
 		#print_square()
+
 	if (success):
+		success = t+1
 		break
+	print(t)
+	square_array = [[0 for x in range(square_step)] for y in range(square_step)]
+	curX = 0
+	curY = 0
+	limX = 0
+	gen_w = 0
+	gen_h = 0
 
 if (success):
-	print("Final Square")
+	print("Final Square (Tried " + str(success) + " times)")
 	print("")
 	print_square()
 else:
 	print("Tried " + str(try_number) +
-	      " times and couldn't find a valid solution.")
+		  " times and couldn't find a valid solution.")
 	print("Try setting height or width min limit lower.")
